@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Shopingly X{% endblock %}
+{% block content %}
+<h1>Checkout</h1>
+<form method="post">
+    {% csrf_token %}
+    <div class="checkout-grid">
+        <div>
+            <h3>1. Delivery Address</h3>
+            {% if addresses %}
+                {% for address in addresses %}
+                <label class="address-select-card">
+                    <input type="radio" name="address_id" value="{{ address.id }}" {% if address.is_default or forloop.first %}checked{% endif %} required>
+                    <strong>{{ address.full_name }}</strong> · {{ address.get_address_type_display }}<br>
+                    {{ address.address_line }}, {{ address.city }}, {{ address.state }} - {{ address.pincode }}<br>
+                    Phone: {{ address.phone }}
+                </label>
+                {% endfor %}
+            {% else %}
+                <p style="color:var(--gray);">You have no saved addresses.</p>
+            {% endif %}
+            <a href="{% url 'accounts:address_add' %}?next={% url 'orders:checkout' %}" class="btn btn-outline">+ Add New Address</a>
+
+            <h3 style="margin-top:28px;">2. Payment Method</h3>
+            <div class="payment-options">
+                <label><input type="radio" name="payment_method" value="cod" checked> Cash on Delivery</label>
+                <label><input type="radio" name="payment_method" value="card"> Credit / Debit Card</label>
+                <label><input type="radio" name="payment_method" value="upi"> UPI</label>
+            </div>
+        </div>
+
+        <div class="order-summary-card">
+            <h3>Order Summary</h3>
+            {% for item in cart %}
+            <div class="cart-summary-row"><span>{{ item.product.name }} × {{ item.quantity }}</span><span>₹{{ item.total_price|floatformat:0 }}</span></div>
+            {% endfor %}
+            <div class="cart-summary-row"><span>Delivery</span><span>Free</span></div>
+            <div class="cart-summary-row cart-summary-total"><span>Total</span><span>₹{{ cart.get_total_price|floatformat:0 }}</span></div>
+            <button type="submit" class="btn btn-primary btn-block" {% if not addresses %}disabled{% endif %} style="margin-top:16px;">Place Order</button>
+        </div>
+    </div>
+</form>
+{% endblock %}

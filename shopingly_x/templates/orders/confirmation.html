@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Order Confirmed — Shopingly X{% endblock %}
+{% block content %}
+<div class="confirmation-card">
+    <div class="confirmation-icon">✅</div>
+    <h1>Order Placed Successfully!</h1>
+    <p style="color:var(--gray);">Thank you for shopping with Shopingly X. Your order #{{ order.id }} has been confirmed.</p>
+    <p style="margin-top:16px;"><strong>Total: ₹{{ order.get_total_cost|floatformat:0 }}</strong><br>Payment: {{ order.get_payment_method_display }}</p>
+    <div style="margin-top:24px; display:flex; gap:12px; justify-content:center;">
+        <a href="{% url 'orders:order_detail' order.id %}" class="btn btn-secondary">View Order</a>
+        <a href="{% url 'products:product_list' %}" class="btn btn-primary">Continue Shopping</a>
+    </div>
+</div>
+{% endblock %}

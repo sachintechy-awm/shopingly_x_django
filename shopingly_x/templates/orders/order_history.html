@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}My Orders — Shopingly X{% endblock %}
+{% block content %}
+<h1>My Orders</h1>
+{% if orders %}
+    {% for order in orders %}
+    <div class="order-card">
+        <div class="order-card-top">
+            <div><strong>Order #{{ order.id }}</strong> · {{ order.created_at|date:"d M Y, h:i A" }}</div>
+            <span class="order-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+        </div>
+        <div>{{ order.items.count }} item(s) · ₹{{ order.get_total_cost|floatformat:0 }} · <a href="{% url 'orders:order_detail' order.id %}" style="color:var(--teal); font-weight:600;">View details</a></div>
+    </div>
+    {% endfor %}
+{% else %}
+    <div class="empty-state"><h3>No orders yet</h3><a href="{% url 'products:product_list' %}" class="btn btn-secondary" style="margin-top:12px;">Start Shopping</a></div>
+{% endif %}
+{% endblock %}

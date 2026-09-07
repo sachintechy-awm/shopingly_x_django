@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}My Addresses — Shopingly X{% endblock %}
+{% block content %}
+<div class="toolbar">
+    <h1>My Addresses</h1>
+    <a href="{% url 'accounts:address_add' %}" class="btn btn-primary">+ Add New Address</a>
+</div>
+{% if addresses %}
+<div class="address-grid">
+    {% for address in addresses %}
+    <div class="address-card">
+        <span class="address-type-tag">{{ address.get_address_type_display }}</span>
+        {% if address.is_default %}<span class="address-type-tag default-tag">Default</span>{% endif %}
+        <p><strong>{{ address.full_name }}</strong><br>
+        {{ address.address_line }}<br>
+        {{ address.city }}, {{ address.state }} - {{ address.pincode }}<br>
+        Phone: {{ address.phone }}</p>
+        <div class="address-actions">
+            <a href="{% url 'accounts:address_delete' address.id %}" class="btn btn-danger" style="padding:6px 14px;">Delete</a>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="empty-state">
+    <h3>No addresses saved</h3>
+    <p>Add an address to speed up checkout.</p>
+</div>
+{% endif %}
+{% endblock %}

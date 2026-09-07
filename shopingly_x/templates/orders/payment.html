@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block title %}Payment — Shopingly X{% endblock %}
+{% block content %}
+<div class="payment-card">
+    <span class="payment-badge">🔒 Simulated Secure Payment</span>
+    <h2>Complete Payment for Order #{{ order.id }}</h2>
+    <p style="color:var(--gray);">This is a demo checkout — no real payment gateway is connected. Submitting this form will mark the order as paid.</p>
+    <div class="cart-summary-row cart-summary-total" style="border:none; padding:12px 0;"><span>Amount Due</span><span>₹{{ order.get_total_cost|floatformat:0 }}</span></div>
+
+    <form method="post">
+        {% csrf_token %}
+        {% if order.payment_method == 'card' %}
+        <div class="form-group"><label>Card Number</label><input type="text" placeholder="4242 4242 4242 4242" maxlength="19"></div>
+        <div style="display:flex; gap:12px;">
+            <div class="form-group" style="flex:1;"><label>Expiry</label><input type="text" placeholder="MM/YY"></div>
+            <div class="form-group" style="flex:1;"><label>CVV</label><input type="text" placeholder="123" maxlength="3"></div>
+        </div>
+        {% else %}
+        <div class="form-group"><label>UPI ID</label><input type="text" placeholder="yourname@upi"></div>
+        {% endif %}
+        <button type="submit" class="btn btn-primary btn-block">Pay ₹{{ order.get_total_cost|floatformat:0 }}</button>
+    </form>
+</div>
+{% endblock %}

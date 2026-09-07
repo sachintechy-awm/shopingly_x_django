@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block title %}My Account — Shopingly X{% endblock %}
+{% block content %}
+<h1>My Account</h1>
+<div class="dashboard-grid">
+    <div class="dashboard-nav">
+        <a href="{% url 'accounts:dashboard' %}"><strong>Dashboard</strong></a>
+        <a href="{% url 'orders:order_history' %}">My Orders</a>
+        <a href="{% url 'accounts:address_list' %}">My Addresses</a>
+        <a href="{% url 'products:product_list' %}">Continue Shopping</a>
+    </div>
+    <div>
+        <div class="stat-row">
+            <div class="stat-box"><div class="num">{{ orders|length }}</div><div class="label">Recent Orders</div></div>
+            <div class="stat-box"><div class="num">{{ addresses|length }}</div><div class="label">Saved Addresses</div></div>
+        </div>
+
+        <h3>Recent Orders</h3>
+        {% if orders %}
+            {% for order in orders %}
+            <div class="order-card">
+                <div class="order-card-top">
+                    <div><strong>Order #{{ order.id }}</strong> · {{ order.created_at|date:"d M Y" }}</div>
+                    <span class="order-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+                </div>
+                <div>₹{{ order.get_total_cost|floatformat:0 }} · <a href="{% url 'orders:order_detail' order.id %}" style="color:var(--teal); font-weight:600;">View details</a></div>
+            </div>
+            {% endfor %}
+        {% else %}
+            <p style="color:var(--gray);">No orders yet. <a href="{% url 'products:product_list' %}" style="color:var(--teal); font-weight:600;">Start shopping</a>.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

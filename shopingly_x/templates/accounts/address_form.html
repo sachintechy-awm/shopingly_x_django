@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Add Address — Shopingly X{% endblock %}
+{% block content %}
+<div class="form-card wide">
+    <h2>Add a new address</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+            {% if field.name == 'is_default' %}
+                <div class="form-group checkbox-row">{{ field }}<label for="{{ field.id_for_label }}">{{ field.label }}</label></div>
+            {% else %}
+            <div class="form-group">
+                <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                {{ field }}
+                {% if field.errors %}<p class="form-errors">{{ field.errors|striptags }}</p>{% endif %}
+            </div>
+            {% endif %}
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">Save Address</button>
+    </form>
+</div>
+{% endblock %}

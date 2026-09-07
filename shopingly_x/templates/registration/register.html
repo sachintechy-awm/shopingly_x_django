@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Sign Up — Shopingly X{% endblock %}
+{% block content %}
+<div class="form-card">
+    <h2>Create your account</h2>
+    <form method="post">
+        {% csrf_token %}
+        {% for field in form %}
+        <div class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+            {% if field.errors %}<p class="form-errors">{{ field.errors|striptags }}</p>{% endif %}
+        </div>
+        {% endfor %}
+        <button type="submit" class="btn btn-primary btn-block">Sign Up</button>
+    </form>
+    <p class="form-footer-note">Already have an account? <a href="{% url 'accounts:login' %}" style="color:var(--teal); font-weight:600;">Login</a></p>
+</div>
+{% endblock %}

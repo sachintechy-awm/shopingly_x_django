@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} — Shopingly X{% endblock %}
+{% block content %}
+<h1>Order #{{ order.id }}</h1>
+<div class="order-card-top" style="margin-bottom:20px;">
+    <span>Placed on {{ order.created_at|date:"d M Y, h:i A" }}</span>
+    <span class="order-status status-{{ order.status }}">{{ order.get_status_display }}</span>
+</div>
+
+<table class="cart-table">
+    <thead><tr><th>Product</th><th>Price</th><th>Qty</th><th>Subtotal</th></tr></thead>
+    <tbody>
+    {% for item in order.items.all %}
+        <tr>
+            <td>{{ item.product_name }}</td>
+            <td>₹{{ item.price|floatformat:0 }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>₹{{ item.get_cost|floatformat:0 }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="cart-summary">
+    <div class="cart-summary-row cart-summary-total"><span>Total</span><span>₹{{ order.get_total_cost|floatformat:0 }}</span></div>
+    <div class="cart-summary-row"><span>Payment</span><span>{{ order.get_payment_method_display }}</span></div>
+    {% if order.address %}
+    <div style="margin-top:14px; padding-top:14px; border-top:1px solid var(--border);">
+        <strong>Delivery Address</strong>
+        <p style="margin:6px 0 0; font-size:0.9rem; color:var(--gray);">
+            {{ order.address.full_name }}<br>
+            {{ order.address.address_line }}, {{ order.address.city }}, {{ order.address.state }} - {{ order.address.pincode }}<br>
+            Phone: {{ order.address.phone }}
+        </p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

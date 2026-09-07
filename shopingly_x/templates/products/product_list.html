@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}{% if category %}{{ category.name }} — {% endif %}Shopingly X{% endblock %}
+
+{% block content %}
+    {% if not category and not query %}
+    <div class="page-hero">
+        <h1>Big Billion Deals, every day.</h1>
+        <p>Electronics, fashion, home & more — all with real offer pricing, right here on Shopingly X.</p>
+    </div>
+    {% endif %}
+
+    <div class="toolbar">
+        <h2 style="margin:0;">
+            {% if query %}Results for "{{ query }}"{% elif category %}{{ category.name }}{% else %}All Products{% endif %}
+        </h2>
+        <form class="sort-form" method="get">
+            {% if query %}<input type="hidden" name="q" value="{{ query }}">{% endif %}
+            <select name="sort" onchange="this.form.submit()">
+                <option value="">Sort: Featured</option>
+                <option value="price_low" {% if request.GET.sort == 'price_low' %}selected{% endif %}>Price: Low to High</option>
+                <option value="price_high" {% if request.GET.sort == 'price_high' %}selected{% endif %}>Price: High to Low</option>
+                <option value="rating" {% if request.GET.sort == 'rating' %}selected{% endif %}>Rating</option>
+            </select>
+        </form>
+    </div>
+
+    {% if products %}
+    <div class="product-grid">
+        {% for product in products %}
+        <a href="{{ product.get_absolute_url }}" class="product-card">
+            <div class="product-thumb">
+                {% if product.discount_percent %}<span class="badge-discount">{{ product.discount_percent }}% OFF</span>{% endif %}
+                {% if product.display_image %}
+                    <img src="{{ product.display_image }}" alt="{{ product.name }}">
+                {% else %}
+                    <span class="product-thumb-placeholder">{{ product.name }}</span>
+                {% endif %}
+            </div>
+            <div class="product-info">
+                <span class="product-category">{{ product.category.name }}</span>
+                <span class="product-name">{{ product.name }}</span>
+                <span class="product-rating">★ {{ product.rating }}</span>
+                <div class="price-row">
+                    <span class="price-now">₹{{ product.current_price|floatformat:0 }}</span>
+                    {% if product.offer_price %}
+                        <span class="price-was">₹{{ product.price|floatformat:0 }}</span>
+                        <span class="price-off">{{ product.discount_percent }}% off</span>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+
+    {% if page_obj %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}<a href="?page={{ page_obj.previous_page_number }}">Prev</a>{% endif %}
+        <span class="current">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+        {% if page_obj.has_next %}<a href="?page={{ page_obj.next_page_number }}">Next</a>{% endif %}
+    </div>
+    {% endif %}
+    {% else %}
+        <div class="empty-state">
+            <h3>No products found</h3>
+            <p>Try a different search term or browse another category.</p>
+        </div>
+    {% endif %}
+{% endblock %}
