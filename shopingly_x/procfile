@@ -1,0 +1,1 @@
+web: gunicorn shopingly_x.wsgi --log-file -
