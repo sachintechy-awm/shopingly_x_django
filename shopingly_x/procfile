@@ -1,1 +1,1 @@
-web: gunicorn shopingly_x.wsgi --log-file -
+web: python manage.py collectstatic --noinput && gunicorn shopingly_x.wsgi --bind 0.0.0.0:$PORT --log-file -
